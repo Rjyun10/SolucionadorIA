@@ -184,3 +184,20 @@ body {
   border: 1px solid var(--border-color);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
+
+/* Seletor de IA Estilo App Nativo */
+.provider-btn {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-check:checked + .provider-btn {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+.provider-btn:hover {
+  color: #f8fafc;
+}

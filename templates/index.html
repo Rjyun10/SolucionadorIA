@@ -32,40 +32,36 @@
         <!-- Logótipo e Título -->
         <a class="navbar-brand fw-bold d-flex align-items-center gap-2 m-0" href="#">
         <span class="brand-icon"><i class="bi bi-cpu-fill"></i></span>
-        <span class="brand-text fs-6 fs-md-5">Solucionador PWA</span>
+        <span class="brand-text fs-6 d-none d-sm-inline">Solucionador PWA</span>
         </a>
 
-        <!-- Área de Opções (Forçada a ficar visível no celular) -->
+        <!-- Seletor de IA Integrado (Estilo Segmented Control de App) -->
         <div class="d-flex align-items-center gap-2">
-        
-        <!-- Seletor em Botões para Telas Médias/Grandes (Desktop) -->
-        <div class="provider-selector-container d-none d-md-flex p-1">
+        <div class="btn-group p-1 bg-dark border border-secondary rounded-pill" role="group">
+            
             <input type="radio" class="btn-check" name="providerOption" id="pGemini" value="gemini" checked onclick="setProvider('gemini')">
-            <label class="btn provider-btn" for="pGemini"><i class="bi bi-stars me-1"></i> Gemini</label>
+            <label class="btn btn-sm provider-btn rounded-pill px-2 py-1 border-0" for="pGemini">
+            <i class="bi bi-stars"></i> <span class="d-none d-md-inline ms-1">Gemini</span>
+            </label>
 
             <input type="radio" class="btn-check" name="providerOption" id="pGroq" value="groq" onclick="setProvider('groq')">
-            <label class="btn provider-btn" for="pGroq"><i class="bi bi-lightning-charge-fill me-1"></i> Groq</label>
+            <label class="btn btn-sm provider-btn rounded-pill px-2 py-1 border-0" for="pGroq">
+            <i class="bi bi-lightning-charge-fill"></i> <span class="d-none d-md-inline ms-1">Groq</span>
+            </label>
 
             <input type="radio" class="btn-check" name="providerOption" id="pOpenAI" value="openai" onclick="setProvider('openai')">
-            <label class="btn provider-btn" for="pOpenAI"><i class="bi bi-robot me-1"></i> OpenAI</label>
-        </div>
+            <label class="btn btn-sm provider-btn rounded-pill px-2 py-1 border-0" for="pOpenAI">
+            <i class="bi bi-robot"></i> <span class="d-none d-md-inline ms-1">OpenAI</span>
+            </label>
 
-        <!-- Seletor Dropdown Exclusivo para Telemóvel -->
-        <div class="d-md-none">
-            <select class="form-select form-select-sm bg-dark text-white border-secondary rounded-3" id="mobileProviderSelect" onchange="setProvider(this.value)">
-            <option value="gemini" selected>✨ Gemini</option>
-            <option value="groq">⚡ Groq</option>
-            <option value="openai">🤖 OpenAI</option>
-            </select>
         </div>
 
         <!-- Botão Chaves API -->
-        <button class="btn btn-key-config btn-sm d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalApiKeys">
+        <button class="btn btn-key-config btn-sm rounded-circle p-2 d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#modalApiKeys" style="width: 36px; height: 36px;">
             <i class="bi bi-key-fill"></i>
-            <span class="d-none d-sm-inline">Chaves API</span>
         </button>
-
         </div>
+
     </div>
     </nav>
 

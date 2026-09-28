@@ -57,8 +57,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setProvider(provider) {
   currentProvider = provider;
+
+  // Guarda a preferência no armazenamento local
+  localStorage.setItem('selectedProvider', provider);
+
+  // Sincroniza a seleção nos botões de Desktop
+  const providerIdMap = {
+    'gemini': 'pGemini',
+    'groq': 'pGroq',
+    'openai': 'pOpenAI'
+  };
+  
+  const radioBtn = document.getElementById(providerIdMap[provider]);
+  if (radioBtn) {
+    radioBtn.checked = true;
+  }
+
+  // Sincroniza a seleção no menu suspenso do Telemóvel
+  const mobileSelect = document.getElementById('mobileProviderSelect');
+  if (mobileSelect) {
+    mobileSelect.value = provider;
+  }
+
   showToast(`Provedor alterado para ${provider.toUpperCase()}`, 'info');
 }
+
+// Restaura o provedor guardado ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+  const savedProvider = localStorage.getItem('selectedProvider') || 'gemini';
+  setProvider(savedProvider);
+});
 
 function showToast(message, type = 'info') {
   const toastEl = document.getElementById('liveToast');

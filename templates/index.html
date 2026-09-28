@@ -27,32 +27,46 @@
 <body>
 
   <!-- Navbar com Glassmorphism -->
-  <nav class="navbar navbar-expand-lg sticky-top custom-navbar px-4 py-3">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
-        <span class="brand-icon"><i class="bi bi-cpu-fill"></i></span>
-        <span class="brand-text">Solucionador PWA</span>
-      </a>
+<nav class="navbar navbar-expand-lg sticky-top custom-navbar px-3 px-md-4 py-2 py-md-3">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <!-- Logótipo e Nome -->
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
+      <span class="brand-icon"><i class="bi bi-cpu-fill"></i></span>
+      <span class="brand-text">Solucionador IA</span>
+    </a>
 
-      <!-- Seletor Estilizado de Provedores de API -->
-      <div class="d-flex align-items-center gap-3">
-        <div class="provider-selector-container d-none d-md-flex p-1">
-          <input type="radio" class="btn-check" name="providerOption" id="pGemini" value="gemini" checked onclick="setProvider('gemini')">
-          <label class="btn provider-btn" for="pGemini"><i class="bi bi-stars me-1"></i> Gemini</label>
+    <!-- Ações e Provedor (Sempre Visíveis em Telemóveis e Computadores) -->
+    <div class="d-flex align-items-center gap-2 gap-md-3">
+      
+      <!-- Visível em Desktops (Botões Estilizados) -->
+      <div class="provider-selector-container d-none d-md-flex p-1">
+        <input type="radio" class="btn-check" name="providerOption" id="pGemini" value="gemini" checked onclick="setProvider('gemini')">
+        <label class="btn provider-btn" for="pGemini"><i class="bi bi-stars me-1"></i> Gemini</label>
 
-          <input type="radio" class="btn-check" name="providerOption" id="pGroq" value="groq" onclick="setProvider('groq')">
-          <label class="btn provider-btn" for="pGroq"><i class="bi bi-lightning-charge-fill me-1"></i> Groq</label>
+        <input type="radio" class="btn-check" name="providerOption" id="pGroq" value="groq" onclick="setProvider('groq')">
+        <label class="btn provider-btn" for="pGroq"><i class="bi bi-lightning-charge-fill me-1"></i> Groq</label>
 
-          <input type="radio" class="btn-check" name="providerOption" id="pOpenAI" value="openai" onclick="setProvider('openai')">
-          <label class="btn provider-btn" for="pOpenAI"><i class="bi bi-robot me-1"></i> OpenAI</label>
-        </div>
-
-        <button class="btn btn-key-config d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalApiKeys">
-          <i class="bi bi-key-fill"></i> Chaves API
-        </button>
+        <input type="radio" class="btn-check" name="providerOption" id="pOpenAI" value="openai" onclick="setProvider('openai')">
+        <label class="btn provider-btn" for="pOpenAI"><i class="bi bi-robot me-1"></i> OpenAI</label>
       </div>
+
+      <!-- Visível Apenas em Telemóveis (Menu Suspenso Compacto) -->
+      <div class="d-md-none">
+        <select class="form-select form-select-sm bg-dark text-white border-secondary" id="mobileProviderSelect" onchange="setProvider(this.value)">
+          <option value="gemini" selected>✨ Gemini</option>
+          <option value="groq">⚡ Groq</option>
+          <option value="openai">🤖 OpenAI</option>
+        </select>
+      </div>
+
+      <!-- Botão para Inserir a Chave API -->
+      <button class="btn btn-key-config d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalApiKeys">
+        <i class="bi bi-key-fill"></i> <span class="d-none d-sm-inline">Chaves API</span>
+      </button>
+
     </div>
-  </nav>
+  </div>
+</nav>
 
   <div class="container my-5">
     <!-- Cabeçalho de Projetos -->

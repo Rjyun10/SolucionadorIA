@@ -1,4 +1,4 @@
-const CACHE_NAME = 'solucionador-v1';
+const CACHE_NAME = 'solucionador-v2';
 const ASSETS = [
   '/',
   '/static/css/style.css',

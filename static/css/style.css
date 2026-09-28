@@ -1,0 +1,186 @@
+:root {
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-input: #334155;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --text-main: #ffffff;
+  --text-muted: #cbd5e1; /* Ajustado para um cinza muito mais claro e legível */
+  --border-color: #475569;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* Navbar com efeito de desfoque */
+.custom-navbar {
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brand-icon {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.brand-text {
+  color: var(--text-main);
+  font-size: 1.15rem;
+}
+
+/* Ajustes de Legibilidade de Textos Secundários */
+.text-muted {
+  color: #cbd5e1 !important;
+}
+
+.form-label {
+  color: #e2e8f0 !important;
+  font-weight: 500;
+}
+
+/* Placeholders dos Campos de Texto */
+::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1;
+}
+
+/* Seletor de Provedor Estilizado */
+.provider-selector-container {
+  background-color: #1e293b;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.provider-btn {
+  color: #cbd5e1;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+}
+
+.provider-btn:hover {
+  color: #ffffff;
+}
+
+.btn-check:checked + .provider-btn {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-key-config {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+}
+
+.btn-key-config:hover {
+  background-color: var(--border-color);
+  color: #fff;
+}
+
+/* Cartões com Bordas Suaves */
+.custom-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Abas Customizadas */
+.custom-tabs .nav-link {
+  color: #cbd5e1;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-weight: 500;
+  padding: 8px 18px;
+  transition: all 0.2s ease;
+}
+
+.custom-tabs .nav-link.active {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.custom-badge-niche {
+  background: rgba(59, 130, 246, 0.25);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-weight: 600;
+}
+
+/* Botões Modernos */
+.btn-primary-custom {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 10px 20px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+}
+
+/* Inputs e Modais */
+.custom-modal {
+  background-color: #1e293b;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+}
+
+.custom-input {
+  background-color: #0f172a;
+  border: 1px solid var(--border-color);
+  color: #ffffff !important;
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.custom-input:focus {
+  background-color: #0f172a;
+  color: #ffffff !important;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.security-banner {
+  background-color: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+/* Notificação Toast */
+.custom-toast {
+  background-color: #1e293b;
+  color: #fff;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}

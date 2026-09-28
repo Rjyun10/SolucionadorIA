@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solucionador de Problemas em Alta</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+
+    <!-- Favicon e Ícones PWA -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+  <!-- Fonte Inter (Google Fonts) & Bootstrap Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Navbar com Glassmorphism -->
+  <nav class="navbar navbar-expand-lg sticky-top custom-navbar px-4 py-3">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
+        <span class="brand-icon"><i class="bi bi-cpu-fill"></i></span>
+        <span class="brand-text">Solucionador PWA</span>
+      </a>
+
+      <!-- Seletor Estilizado de Provedores de API -->
+      <div class="d-flex align-items-center gap-3">
+        <div class="provider-selector-container d-none d-md-flex p-1">
+          <input type="radio" class="btn-check" name="providerOption" id="pGemini" value="gemini" checked onclick="setProvider('gemini')">
+          <label class="btn provider-btn" for="pGemini"><i class="bi bi-stars me-1"></i> Gemini</label>
+
+          <input type="radio" class="btn-check" name="providerOption" id="pGroq" value="groq" onclick="setProvider('groq')">
+          <label class="btn provider-btn" for="pGroq"><i class="bi bi-lightning-charge-fill me-1"></i> Groq</label>
+
+          <input type="radio" class="btn-check" name="providerOption" id="pOpenAI" value="openai" onclick="setProvider('openai')">
+          <label class="btn provider-btn" for="pOpenAI"><i class="bi bi-robot me-1"></i> OpenAI</label>
+        </div>
+
+        <button class="btn btn-key-config d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalApiKeys">
+          <i class="bi bi-key-fill"></i> Chaves API
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <!-- Cabeçalho de Projetos -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1">Projetos & Nichos</h2>
+        <p class="text-muted small mb-0">Gerencie e analise oportunidades para diferentes mercados</p>
+      </div>
+      <button class="btn btn-primary-custom d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewProject">
+        <i class="bi bi-plus-lg"></i> Novo Projeto
+      </button>
+    </div>
+
+    <!-- Navegação em Abas de Projetos -->
+    <ul class="nav custom-tabs mb-4 gap-2" id="projectsTabs"></ul>
+
+    <!-- Detalhes do Projeto Ativo -->
+    <div id="projectDetailCard" class="card custom-card mb-4 d-none">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <span id="displayNiche" class="badge custom-badge-niche mb-2"></span>
+            <h3 id="displayTitle" class="fw-bold text-white mb-2"></h3>
+            <p id="displayDesc" class="text-muted mb-0"></p>
+          </div>
+          <button class="btn btn-outline-danger btn-sm border-0 rounded-circle p-2" onclick="deleteActiveProject()" title="Excluir Projeto">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Container dos Resultados -->
+    <div id="resultsContainer">
+      <div class="card custom-card py-5 text-center">
+        <div class="card-body">
+          <i class="bi bi-folder-plus display-4 text-muted mb-3 d-block"></i>
+          <p class="text-muted mb-0">Selecione ou crie um projeto para iniciar as pesquisas automatizadas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Gerenciador de Chaves API -->
+  <div class="modal fade" id="modalApiKeys" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content custom-modal">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock-fill text-primary me-2"></i> Chaves de API</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body py-4">
+          <div class="security-banner mb-4 p-3 rounded-4">
+            <i class="bi bi-shield-check text-success me-2"></i>
+            <span class="small">
+              As suas chaves são armazenadas estritamente de forma local no seu dispositivo e nunca ficam expostas no servidor.
+            </span>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small text-muted fw-semibold">Google Gemini API Key</label>
+            <input type="password" id="keyGemini" class="form-control custom-input" placeholder="AIzaSy...">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small text-muted fw-semibold">Groq API Key</label>
+            <input type="password" id="keyGroq" class="form-control custom-input" placeholder="gsk_...">
+          </div>
+          <div class="mb-3">
+            <label class="form-label small text-muted fw-semibold">OpenAI API Key</label>
+            <input type="password" id="keyOpenAI" class="form-control custom-input" placeholder="sk-...">
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-primary-custom w-100" id="btnSaveKeys">Guardar Chaves</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Adicionar Novo Projeto -->
+  <div class="modal fade" id="modalNewProject" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content custom-modal">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold"><i class="bi bi-folder-plus text-primary me-2"></i> Criar Novo Projeto</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="formNewProject">
+          <div class="modal-body py-4">
+            <div class="mb-3">
+              <label class="form-label small text-muted fw-semibold">Título do Projeto</label>
+              <input type="text" id="projTitle" class="form-control custom-input" placeholder="Ex: Gestão para Corretores de Imóveis" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small text-muted fw-semibold">Nicho / Público-Alvo</label>
+              <input type="text" id="projNiche" class="form-control custom-input" placeholder="Ex: Corretores imobiliários autônomos" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small text-muted fw-semibold">Breve Descrição do Objetivo</label>
+              <textarea id="projDesc" class="form-control custom-input" rows="3" placeholder="Ex: Encontrar ferramentas e cursos para captação automática de clientes." required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-0 pt-0">
+            <button type="submit" class="btn btn-primary-custom w-100">Criar Projeto</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container para Notificações Elegantes -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+    <div id="liveToast" class="toast custom-toast border-0 rounded-4" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-body d-flex align-items-center gap-2" id="toastMessage"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/security.js"></script>
+  <script src="/static/js/app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(() => console.log('Service Worker Registrado!'))
+        .catch(err => console.error('Erro SW:', err));
+    }
+  </script>
+</body>
+</html>

@@ -26,47 +26,48 @@
 </head>
 <body>
 
-  <!-- Navbar com Glassmorphism -->
-<nav class="navbar navbar-expand-lg sticky-top custom-navbar px-3 px-md-4 py-2 py-md-3">
-  <div class="container-fluid d-flex justify-content-between align-items-center">
-    <!-- Logótipo e Nome -->
-    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
-      <span class="brand-icon"><i class="bi bi-cpu-fill"></i></span>
-      <span class="brand-text">Solucionador IA</span>
-    </a>
+    <nav class="navbar custom-navbar px-3 py-2 sticky-top">
+    <div class="container-fluid p-0 d-flex justify-content-between align-items-center">
+        
+        <!-- Logótipo e Título -->
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2 m-0" href="#">
+        <span class="brand-icon"><i class="bi bi-cpu-fill"></i></span>
+        <span class="brand-text fs-6 fs-md-5">Solucionador PWA</span>
+        </a>
 
-    <!-- Ações e Provedor (Sempre Visíveis em Telemóveis e Computadores) -->
-    <div class="d-flex align-items-center gap-2 gap-md-3">
-      
-      <!-- Visível em Desktops (Botões Estilizados) -->
-      <div class="provider-selector-container d-none d-md-flex p-1">
-        <input type="radio" class="btn-check" name="providerOption" id="pGemini" value="gemini" checked onclick="setProvider('gemini')">
-        <label class="btn provider-btn" for="pGemini"><i class="bi bi-stars me-1"></i> Gemini</label>
+        <!-- Área de Opções (Forçada a ficar visível no celular) -->
+        <div class="d-flex align-items-center gap-2">
+        
+        <!-- Seletor em Botões para Telas Médias/Grandes (Desktop) -->
+        <div class="provider-selector-container d-none d-md-flex p-1">
+            <input type="radio" class="btn-check" name="providerOption" id="pGemini" value="gemini" checked onclick="setProvider('gemini')">
+            <label class="btn provider-btn" for="pGemini"><i class="bi bi-stars me-1"></i> Gemini</label>
 
-        <input type="radio" class="btn-check" name="providerOption" id="pGroq" value="groq" onclick="setProvider('groq')">
-        <label class="btn provider-btn" for="pGroq"><i class="bi bi-lightning-charge-fill me-1"></i> Groq</label>
+            <input type="radio" class="btn-check" name="providerOption" id="pGroq" value="groq" onclick="setProvider('groq')">
+            <label class="btn provider-btn" for="pGroq"><i class="bi bi-lightning-charge-fill me-1"></i> Groq</label>
 
-        <input type="radio" class="btn-check" name="providerOption" id="pOpenAI" value="openai" onclick="setProvider('openai')">
-        <label class="btn provider-btn" for="pOpenAI"><i class="bi bi-robot me-1"></i> OpenAI</label>
-      </div>
+            <input type="radio" class="btn-check" name="providerOption" id="pOpenAI" value="openai" onclick="setProvider('openai')">
+            <label class="btn provider-btn" for="pOpenAI"><i class="bi bi-robot me-1"></i> OpenAI</label>
+        </div>
 
-      <!-- Visível Apenas em Telemóveis (Menu Suspenso Compacto) -->
-      <div class="d-md-none">
-        <select class="form-select form-select-sm bg-dark text-white border-secondary" id="mobileProviderSelect" onchange="setProvider(this.value)">
-          <option value="gemini" selected>✨ Gemini</option>
-          <option value="groq">⚡ Groq</option>
-          <option value="openai">🤖 OpenAI</option>
-        </select>
-      </div>
+        <!-- Seletor Dropdown Exclusivo para Telemóvel -->
+        <div class="d-md-none">
+            <select class="form-select form-select-sm bg-dark text-white border-secondary rounded-3" id="mobileProviderSelect" onchange="setProvider(this.value)">
+            <option value="gemini" selected>✨ Gemini</option>
+            <option value="groq">⚡ Groq</option>
+            <option value="openai">🤖 OpenAI</option>
+            </select>
+        </div>
 
-      <!-- Botão para Inserir a Chave API -->
-      <button class="btn btn-key-config d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalApiKeys">
-        <i class="bi bi-key-fill"></i> <span class="d-none d-sm-inline">Chaves API</span>
-      </button>
+        <!-- Botão Chaves API -->
+        <button class="btn btn-key-config btn-sm d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#modalApiKeys">
+            <i class="bi bi-key-fill"></i>
+            <span class="d-none d-sm-inline">Chaves API</span>
+        </button>
 
+        </div>
     </div>
-  </div>
-</nav>
+    </nav>
 
   <div class="container my-5">
     <!-- Cabeçalho de Projetos -->

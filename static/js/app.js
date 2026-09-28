@@ -1,8 +1,8 @@
 let currentProjects = JSON.parse(localStorage.getItem('user_projects') || '[]');
 let activeProjectId = null;
-let currentProvider = 'gemini';
+let currentProvider = localStorage.getItem('selectedProvider') || 'gemini';
 
-// Função utilitária para converter texto em Title Case (Primeiras Letras Maiúsculas)
+// Função utilitária para converter texto em Title Case
 function toTitleCase(str) {
   if (!str) return '';
   return str.toLowerCase().replace(/(?:^|\s|-)\S/g, function(a) {
@@ -10,94 +10,108 @@ function toTitleCase(str) {
   });
 }
 
+// Inicialização Principal do DOM
 document.addEventListener('DOMContentLoaded', () => {
   renderProjectsNav();
   loadApiKeysIntoInputs();
 
+  // Sincroniza a interface com o provedor guardado (sem disparar toast)
+  syncProviderUI(currentProvider);
+
   // Gerenciador do formulário de novo projeto
-  document.getElementById('formNewProject').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const title = toTitleCase(document.getElementById('projTitle').value);
-    const niche = toTitleCase(document.getElementById('projNiche').value);
-    const description = document.getElementById('projDesc').value;
+  const formNewProject = document.getElementById('formNewProject');
+  if (formNewProject) {
+    formNewProject.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = toTitleCase(document.getElementById('projTitle').value);
+      const niche = toTitleCase(document.getElementById('projNiche').value);
+      const description = document.getElementById('projDesc').value;
 
-    const newProject = {
-      id: Date.now().toString(),
-      title,
-      description,
-      niche,
-      results: null,
-      createdAt: new Date().toLocaleDateString()
-    };
+      const newProject = {
+        id: Date.now().toString(),
+        title,
+        description,
+        niche,
+        results: null,
+        createdAt: new Date().toLocaleDateString()
+      };
 
-    currentProjects.push(newProject);
-    saveProjects();
-    renderProjectsNav();
-    switchProject(newProject.id);
+      currentProjects.push(newProject);
+      saveProjects();
+      renderProjectsNav();
+      switchProject(newProject.id);
 
-    document.getElementById('formNewProject').reset();
-    bootstrap.Modal.getInstance(document.getElementById('modalNewProject')).hide();
-    showToast('Projeto criado com sucesso!', 'success');
-  });
+      document.getElementById('formNewProject').reset();
+      const modalEl = document.getElementById('modalNewProject');
+      if (modalEl) {
+        const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modalInstance.hide();
+      }
+      showToast('Projeto criado com sucesso!', 'success');
+    });
+  }
 
   // Guardar chaves de API
-  document.getElementById('btnSaveKeys').addEventListener('click', () => {
-    const geminiKey = document.getElementById('keyGemini').value;
-    const groqKey = document.getElementById('keyGroq').value;
-    const openaiKey = document.getElementById('keyOpenAI').value;
+  const btnSaveKeys = document.getElementById('btnSaveKeys');
+  if (btnSaveKeys) {
+    btnSaveKeys.addEventListener('click', () => {
+      const geminiKey = document.getElementById('keyGemini').value;
+      const groqKey = document.getElementById('keyGroq').value;
+      const openaiKey = document.getElementById('keyOpenAI').value;
 
-    APIManager.saveKey('gemini', geminiKey);
-    APIManager.saveKey('groq', groqKey);
-    APIManager.saveKey('openai', openaiKey);
+      APIManager.saveKey('gemini', geminiKey);
+      APIManager.saveKey('groq', groqKey);
+      APIManager.saveKey('openai', openaiKey);
 
-    showToast('Chaves de API guardadas com segurança!', 'success');
-    bootstrap.Modal.getInstance(document.getElementById('modalApiKeys')).hide();
-  });
+      showToast('Chaves de API guardadas com segurança!', 'success');
+      
+      const modalEl = document.getElementById('modalApiKeys');
+      if (modalEl) {
+        const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modalInstance.hide();
+      }
+    });
+  }
 });
 
-function setProvider(provider) {
-  currentProvider = provider;
-
-  // Guarda a preferência no armazenamento local
-  localStorage.setItem('selectedProvider', provider);
-
-  // Sincroniza a seleção nos botões de Desktop
+// Atualiza a interface visual do seletor sem re-notificar
+function syncProviderUI(provider) {
   const providerIdMap = {
     'gemini': 'pGemini',
     'groq': 'pGroq',
     'openai': 'pOpenAI'
   };
-  
+
   const radioBtn = document.getElementById(providerIdMap[provider]);
-  if (radioBtn) {
-    radioBtn.checked = true;
-  }
+  if (radioBtn) radioBtn.checked = true;
 
-  // Sincroniza a seleção no menu suspenso do Telemóvel
   const mobileSelect = document.getElementById('mobileProviderSelect');
-  if (mobileSelect) {
-    mobileSelect.value = provider;
-  }
-
-  showToast(`Provedor alterado para ${provider.toUpperCase()}`, 'info');
+  if (mobileSelect) mobileSelect.value = provider;
 }
 
-// Restaura o provedor guardado ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-  const savedProvider = localStorage.getItem('selectedProvider') || 'gemini';
-  setProvider(savedProvider);
-});
+// Alteração manual do provedor via interface (Desktop ou Mobile)
+function setProvider(provider) {
+  if (!provider) return;
+  
+  currentProvider = provider;
+  localStorage.setItem('selectedProvider', provider);
+  
+  syncProviderUI(provider);
+  showToast(`Provedor alterado para ${provider.toUpperCase()}`, 'info');
+}
 
 function showToast(message, type = 'info') {
   const toastEl = document.getElementById('liveToast');
   const toastMsg = document.getElementById('toastMessage');
   
+  if (!toastEl || !toastMsg) return;
+
   const icon = type === 'success' ? '<i class="bi bi-check-circle-fill text-success fs-5"></i>' : 
                type === 'warning' ? '<i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>' :
                '<i class="bi bi-info-circle-fill text-primary fs-5"></i>';
 
   toastMsg.innerHTML = `${icon} <span>${message}</span>`;
-  const toast = new bootstrap.Toast(toastEl);
+  const toast = bootstrap.Toast.getOrCreateInstance(toastEl);
   toast.show();
 }
 
@@ -107,6 +121,8 @@ function saveProjects() {
 
 function renderProjectsNav() {
   const container = document.getElementById('projectsTabs');
+  if (!container) return;
+  
   container.innerHTML = '';
 
   if (currentProjects.length === 0) {
@@ -172,18 +188,29 @@ function deleteActiveProject() {
 }
 
 function loadApiKeysIntoInputs() {
-  document.getElementById('keyGemini').value = APIManager.getKey('gemini') || '';
-  document.getElementById('keyGroq').value = APIManager.getKey('groq') || '';
-  document.getElementById('keyOpenAI').value = APIManager.getKey('openai') || '';
+  const geminiInput = document.getElementById('keyGemini');
+  const groqInput = document.getElementById('keyGroq');
+  const openaiInput = document.getElementById('keyOpenAI');
+
+  if (geminiInput) geminiInput.value = APIManager.getKey('gemini') || '';
+  if (groqInput) groqInput.value = APIManager.getKey('groq') || '';
+  if (openaiInput) openaiInput.value = APIManager.getKey('openai') || '';
 }
 
 async function runAnalysis(projectId) {
   const proj = currentProjects.find(p => p.id === projectId);
-  const apiKey = APIManager.getKey(currentProvider);
+  if (!proj) return;
+
+  const providerToUse = currentProvider || localStorage.getItem('selectedProvider') || 'gemini';
+  const apiKey = APIManager.getKey(providerToUse);
 
   if (!apiKey) {
-    showToast(`Adicione a sua chave de API para o ${currentProvider.toUpperCase()}`, 'warning');
-    new bootstrap.Modal(document.getElementById('modalApiKeys')).show();
+    showToast(`Adicione a sua chave de API para o ${providerToUse.toUpperCase()}`, 'warning');
+    const modalEl = document.getElementById('modalApiKeys');
+    if (modalEl) {
+      const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+      modalInstance.show();
+    }
     return;
   }
 
@@ -192,7 +219,7 @@ async function runAnalysis(projectId) {
     <div class="card custom-card py-5 text-center">
       <div class="card-body">
         <div class="spinner-border text-primary mb-3" role="status"></div>
-        <p class="lead fw-semibold text-white mb-1">Mapeando problemas e oportunidades...</p>
+        <p class="lead fw-semibold text-white mb-1">Mapeando problemas e oportunidades com ${providerToUse.toUpperCase()}...</p>
         <p class="text-muted small mb-0">Aguarde enquanto a IA analisa o mercado e gera os métodos.</p>
       </div>
     </div>
@@ -209,7 +236,7 @@ async function runAnalysis(projectId) {
         title: proj.title,
         description: proj.description,
         niche: proj.niche,
-        provider: currentProvider
+        provider: providerToUse
       })
     });
 
@@ -247,6 +274,7 @@ async function runAnalysis(projectId) {
 
 function renderResults(data) {
   const container = document.getElementById('resultsContainer');
+  if (!container) return;
   
   let methodsHtml = (data.methods || []).map(m => `
     <div class="col-md-6 mb-4">
